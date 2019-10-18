@@ -1,0 +1,58 @@
+{
+  "variables": {
+    "api_token": "xxxxxxxxxxx",
+    "api_key": "xxxxxxxxxxx",
+    "hostname": "ubuntu-host",
+    "server_cores": "2",
+    "server_memory": "4",
+    "storage_capacity": "10",
+    "secondary_storage": "false",
+    "ssh_username": "someuser",
+    "ssh_password": "examplePassword",
+    "base_template_uuid": "",
+    "isoimage_uuid": "",
+    "isoimage_url": "https://releases.ubuntu.com/18.04.5/ubuntu-18.04.5-live-server-amd64.iso",
+    "ssh_wait_timeout": "120s"
+  },
+  "builders": [
+    {
+      "type": "gridscale",
+      "api_token": "{{user `api_token`}}",
+      "api_key": "{{user `api_key`}}",
+      "hostname": "{{user `hostname`}}",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_password": "{{user `ssh_password`}}",
+      "server_memory": "{{user `server_memory`}}",
+      "server_cores": "{{user `server_cores`}}",
+      "storage_capacity": "{{user `storage_capacity`}}",
+      "secondary_storage": "{{user `secondary_storage`}}",
+      "base_template_uuid": "{{user `base_template_uuid`}}",
+      "template_name": "{{user `template_name`}}",
+      "server_name": "{{user `server_name`}}",
+      "isoimage_uuid": "{{user `isoimage_uuid`}}",
+      "isoimage_url": "{{user `isoimage_url`}}",
+      "boot_wait": "1m20s",
+      "boot_command": [
+        "<enter><wait>",
+        "<enter><wait>",
+        "<enter><wait>",
+        "<wait10s><enter><wait>",
+        "<enter><wait>",
+        "<enter><wait>",
+        "<tab><wait><tab><wait><tab><wait><tab><wait><tab><wait><enter><wait>",
+        "<enter><wait><tab><wait><enter><wait>",
+        "yourname<enter><wait>{{user `hostname`}}<enter><wait>{{user `ssh_username`}}<enter><wait>{{user `ssh_password`}}<enter><wait>{{user `ssh_password`}}<enter><wait><enter><wait>",
+        "<enter><wait><tab><wait><tab><wait><enter><wait><tab><wait><enter><wait>",
+        "<wait5m><enter><wait15s><enter><wait5s>"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sleep 30"
+      ]
+    }
+  ]
+}

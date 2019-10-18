@@ -1,0 +1,158 @@
+---
+description: >
+  The gridscale Packer builder is able to create new images for use with
+
+  gridscale. The builder takes a source image, runs any provisioning
+  necessary
+
+  on the image after launching it, then snapshots it into a reusable image. This
+
+  reusable image can then be used as the foundation of new servers that are
+
+  launched within gridscale.
+layout: docs
+page_title: gridscale - Builders
+sidebar_title: gridscale
+---
+
+# gridscale Builder
+
+Type: `gridscale`
+
+The `gridscale` Packer builder is able to create new images for use with
+[gridscale](https://gridscale.io). The builder takes a source image,
+runs any provisioning necessary on the image after launching it, then snapshots
+it into a reusable image. This reusable image can then be used as the
+foundation of new servers that are launched within gridscale.
+
+The builder does _not_ manage images. Once it creates an image, it is up to you
+to use it or delete it.
+
+## Configuration Reference
+
+There are many configuration options available for the builder. They are
+segmented below into two categories: required and optional parameters. Within
+each category, the available configuration keys are alphabetized.
+
+### Communicator Config
+
+In addition to the builder options, a
+[communicator](/docs/templates/communicator) can be configured for this builder.
+
+@include 'helper/communicator/Config-not-required.mdx'
+
+@include 'helper/communicator/SSH-not-required.mdx'
+
+@include 'helper/communicator/SSH-Private-Key-File-not-required.mdx'
+
+### Required:
+
+- `api_token` (string) - The client TOKEN to use to access your account. It
+  can also be specified via environment variable `GRIDSCALE_TOKEN`, if
+  set.
+
+- `api_key` (string) - The client KEY (UUID) to use to access your account. It
+  can also be specified via environment variable `GRIDSCALE_UUID`, if
+  set.
+
+- `server_cores` (int) - Number of server cores.
+
+- `server_memory` (int) - Server memory capacity (in GB).
+
+- `storage_capacity` (int) - Server's storage capacity (in GB).
+
+### Optional:
+
+- `api_url` (string) - The server URL to use to access your account.
+  Default: "https://api.gridscale.io".
+
+- `api_request_headers` (string) - Custom HTTP request headers.
+  It is used for debugging purposes. Format: "key1:val1,key2:val2"
+
+- `base_template_uuid` (string) - A pre-built template UUID.
+  This template is used as a root template to produce another template.
+  Note: one of these fields has to be set: isoimage_uuid, isoimage_url, base_template_uuid.
+
+- `ssh_username` (string) - Username to access the server via SSH. (default: "root")
+
+- `ssh_password` (string) - Password to access the server via SSH.
+  Note: When `base_template_uuid` is used, `ssh_password` is required.
+
+- `ssh_private_key_file` (string) - Path to a PEM encoded private key file to use to authenticate with SSH.
+  The `~` can be used in path and will be expanded to the home directory
+  of current user.
+
+- `template_name` (string) - Name of the output template.
+
+- `hostname` (string) - Name of the host.
+
+- `server_name` (string) - Name of the server.
+
+- `secondary_storage` (boolean) - SecondaryStorage is set to true when
+  the server needs a secondary storage during producing template process.
+
+- `isoimage_uuid` (string) - A pre-built iso-image is used by the given
+  ISO-image UUID. If isoimage_uuid is set, isoimage_url is ignored.
+  Note: one of these fields has to be set: isoimage_uuid, isoimage_url, base_template_uuid.
+
+- `isoimage_url` (string) - An URL is used to download an ISO-image.
+  If isoimage_uuid is set, isoimage_url is ignored.
+  Note: one of these fields has to be set: isoimage_uuid, isoimage_url, base_template_uuid.
+
+- `boot_command` (list) - This is an array of commands to type when the server instance is first
+  booted. The goal of these commands should be to type just enough to
+  initialize the operating system installer. Special keys can be typed as
+  well, and are covered in the section below on the boot command. If this
+  is not specified, it is assumed the installer will start itself.
+
+- `boot_wait` (string) - The time to wait after booting the initial virtual machine before typing
+  the `boot_command`. The value of this should be a duration. Examples are
+  `5s` and `1m30s` which will cause Packer to wait five seconds and one
+  minute 30 seconds, respectively. If this isn't specified, the default is
+  `10s` or 10 seconds. To set boot_wait to 0s, use a negative number, such
+  as "-1s"
+
+ - `boot_key_interval` (string) - Time in ms to wait between each key press
+
+## Basic Example
+
+Here is a basic example. It is completely valid as soon as you enter your own
+access tokens:
+
+```json
+{
+  "variables": {
+    "api_token": "xxxxxxxxxxx",
+    "api_key": "xxxxxxxxxxx",
+    "ssh_password": "examplePassword",
+    "hostname": "ubuntu-host",
+    "server_cores": "2",
+    "server_memory": "4",
+    "storage_capacity": "10",
+    "secondary_storage": "true",
+    "base_template_uuid": "4db64bfc-9fb2-4976-80b5-94ff43b1233a",
+    "isoimage_uuid": "",
+    "isoimage_url": "",
+    "ssh_wait_timeout": "120s"
+  },
+  "builders": [
+    {
+      "type": "gridscale",
+      "api_token": "{{user `api_token`}}",
+      "api_key": "{{user `api_key`}}",
+      "ssh_password": "{{user `ssh_password`}}",
+      "hostname": "{{user `hostname`}}",
+      "ssh_username": "root",
+      "server_memory": "{{user `server_memory`}}",
+      "server_cores": "{{user `server_cores`}}",
+      "storage_capacity": "{{user `storage_capacity`}}",
+      "secondary_storage": "{{user `secondary_storage`}}",
+      "base_template_uuid": "{{user `base_template_uuid`}}",
+      "template_name": "{{user `template_name`}}",
+      "server_name": "{{user `server_name`}}",
+      "isoimage_uuid": "{{user `isoimage_uuid`}}",
+      "isoimage_url": "{{user `isoimage_url`}}"
+    }
+  ]
+}
+```

@@ -1,0 +1,45 @@
+{
+  "variables": {
+    "api_token": "xxxxxxxxxxx",
+    "api_key": "xxxxxxxxxxx",
+    "ssh_password": "examplePassword",
+    "hostname": "ubuntu-host",
+    "server_cores": "2",
+    "server_memory": "4",
+    "storage_capacity": "10",
+    "secondary_storage": "true",
+    "base_template_uuid": "4db64bfc-9fb2-4976-80b5-94ff43b1233a",
+    "isoimage_uuid": "",
+    "isoimage_url": "",
+    "ssh_wait_timeout": "120s"
+  },
+  "builders": [
+    {
+      "type": "gridscale",
+      "api_token": "{{user `api_token`}}",
+      "api_key": "{{user `api_key`}}",
+      "ssh_password": "{{user `ssh_password`}}",
+      "hostname": "{{user `hostname`}}",
+      "ssh_username": "root",
+      "server_memory": "{{user `server_memory`}}",
+      "server_cores": "{{user `server_cores`}}",
+      "storage_capacity": "{{user `storage_capacity`}}",
+      "secondary_storage": "{{user `secondary_storage`}}",
+      "base_template_uuid": "{{user `base_template_uuid`}}",
+      "template_name": "{{user `template_name`}}",
+      "server_name": "{{user `server_name`}}",
+      "isoimage_uuid": "{{user `isoimage_uuid`}}",
+      "isoimage_url": "{{user `isoimage_url`}}"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sleep 30",
+        "sudo apt update",
+        "sudo apt install nginx -y"
+      ]
+    }
+  ]
+}

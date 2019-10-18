@@ -27,6 +27,7 @@ import (
 	dockerbuilder "github.com/hashicorp/packer/builder/docker"
 	filebuilder "github.com/hashicorp/packer/builder/file"
 	googlecomputebuilder "github.com/hashicorp/packer/builder/googlecompute"
+	gridscalebuilder "github.com/hashicorp/packer/builder/gridscale"
 	hcloudbuilder "github.com/hashicorp/packer/builder/hcloud"
 	hyperonebuilder "github.com/hashicorp/packer/builder/hyperone"
 	hypervisobuilder "github.com/hashicorp/packer/builder/hyperv/iso"
@@ -128,6 +129,7 @@ var Builders = map[string]packersdk.Builder{
 	"docker":              new(dockerbuilder.Builder),
 	"file":                new(filebuilder.Builder),
 	"googlecompute":       new(googlecomputebuilder.Builder),
+	"gridscale":           new(gridscalebuilder.Builder),
 	"hcloud":              new(hcloudbuilder.Builder),
 	"hyperone":            new(hyperonebuilder.Builder),
 	"hyperv-iso":          new(hypervisobuilder.Builder),
