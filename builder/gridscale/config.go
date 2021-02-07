@@ -65,7 +65,9 @@ type Config struct {
 	BootWait time.Duration `mapstructure:"boot_wait" required:"false"`
 	// Time in ms to wait between each key press
 	BootKeyInterval time.Duration `mapstructure:"boot_key_interval" required:"false"`
-	ctx             interpolate.Context
+	// A list of files' relative paths that need to be served on a HTTP server
+	Files []string `mapstructure:"files" required:"false"`
+	ctx   interpolate.Context
 }
 
 func NewConfig(raws ...interface{}) (*Config, []string, error) {

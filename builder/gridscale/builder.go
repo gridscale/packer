@@ -63,6 +63,15 @@ func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (pack
 
 	// Build the steps
 	steps := []multistep.Step{
+		&stepGetPublicNetwork{
+			client: client,
+			ui:     ui,
+		},
+		&stepServeHTTPFiles{
+			client: client,
+			config: &b.config,
+			ui:     ui,
+		},
 		&stepCreateServer{
 			client: client,
 			config: &b.config,
@@ -103,10 +112,6 @@ func (b *Builder) Run(ctx context.Context, ui packer.Ui, hook packer.Hook) (pack
 		&stepLinkServerIPAddr{
 			client: client,
 			config: &b.config,
-			ui:     ui,
-		},
-		&stepGetPublicNetwork{
-			client: client,
 			ui:     ui,
 		},
 		&stepLinkServerPublicNetwork{
